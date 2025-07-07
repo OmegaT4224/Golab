@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golab - Demo (No 3D)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            margin: 0; 
+            padding: 20px;
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        .card h3 {
+            margin-top: 0;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #00ff00;
+            animation: pulse 2s ease-in-out infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .metric {
+            display: flex;
+            justify-content: space-between;
+            margin: 10px 0;
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .debug-console {
+            background: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            padding: 15px;
+            max-height: 300px;
+            overflow-y: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+        }
+        .log-entry {
+            margin: 5px 0;
+            padding: 3px 0;
+        }
+        .log-info { color: #00ffff; }
+        .log-debug { color: #888; }
+        .log-warn { color: #ffaa00; }
+        .log-error { color: #ff0000; }
+        .controls {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 10px 20px;
+            margin: 5px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Golab - Quantum Blockchain Asset Management</h1>
+            <p>Demonstration of quantum circuits, blockchain technology, and asset management</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <h3><span class="status"></span> Quantum Processor</h3>
+                <div class="metric">
+                    <span>Qubits:</span>
+                    <span id="qubit-count">3</span>
+                </div>
+                <div class="metric">
+                    <span>Entangled:</span>
+                    <span id="entangled-status">No</span>
+                </div>
+                <div class="metric">
+                    <span>Operations:</span>
+                    <span id="quantum-ops">0</span>
+                </div>
+                <div class="metric">
+                    <span>Last Signature:</span>
+                    <span id="last-signature">None</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><span class="status"></span> Blockchain Core</h3>
+                <div class="metric">
+                    <span>Blocks:</span>
+                    <span id="block-count">1</span>
+                </div>
+                <div class="metric">
+                    <span>Pending Tx:</span>
+                    <span id="pending-tx">0</span>
+                </div>
+                <div class="metric">
+                    <span>Hash Rate:</span>
+                    <span id="hash-rate">0 H/s</span>
+                </div>
+                <div class="metric">
+                    <span>Difficulty:</span>
+                    <span id="difficulty">2</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><span class="status"></span> Asset Manager</h3>
+                <div class="metric">
+                    <span>Total Assets:</span>
+                    <span id="total-assets">0</span>
+                </div>
+                <div class="metric">
+                    <span>ERC20 Tokens:</span>
+                    <span id="erc20-count">0</span>
+                </div>
+                <div class="metric">
+                    <span>NFTs:</span>
+                    <span id="nft-count">0</span>
+                </div>
+                <div class="metric">
+                    <span>Total Value:</span>
+                    <span id="total-value">$0.00</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3><span class="status"></span> System Health</h3>
+                <div class="metric">
+                    <span>Status:</span>
+                    <span id="system-status">Initializing</span>
+                </div>
+                <div class="metric">
+                    <span>Uptime:</span>
+                    <span id="uptime">0s</span>
+                </div>
+                <div class="metric">
+                    <span>Error Rate:</span>
+                    <span id="error-rate">0%</span>
+                </div>
+                <div class="metric">
+                    <span>Performance Score:</span>
+                    <span id="performance-score">100</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="controls">
+            <button class="btn" onclick="demonstrateQuantumSignature()">🔬 Generate Quantum Signature</button>
+            <button class="btn" onclick="demonstrateTokenTransfer()">💱 Transfer Tokens</button>
+            <button class="btn" onclick="demonstrateBlockMining()">⛏️ Mine Block</button>
+            <button class="btn" onclick="demonstrateAssetCreation()">🎨 Create NFT</button>
+            <button class="btn" onclick="generateDiagnosticReport()">📊 Generate Report</button>
+        </div>
+
+        <div class="card">
+            <h3>🐛 Debug Console</h3>
+            <div class="debug-console" id="debug-console">
+                <div class="log-entry log-info">System initializing...</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core modules without Three.js dependency -->
+    <script src="src/quantum/QuantumProcessor.js"></script>
+    <script src="src/blockchain/BlockchainCore.js"></script>
+    <script src="src/assets/AssetManager.js"></script>
+    <script src="src/debug/DebugSystem.js"></script>
+    
+    <script>
+        // Simplified demo application without Three.js
+        class SimpleDemoApp {
+            constructor() {
+                this.debugSystem = new DebugSystem();
+                this.quantumProcessor = new QuantumProcessor();
+                this.blockchainCore = new BlockchainCore(this.quantumProcessor);
+                this.assetManager = new AssetManager(this.blockchainCore, this.quantumProcessor);
+                this.startTime = Date.now();
+                this.updateInterval = null;
+            }
+
+            async initialize() {
+                try {
+                    this.debugSystem.setLogLevel('INFO');
+                    this.quantumProcessor.setDebugSystem(this.debugSystem);
+                    this.blockchainCore.setDebugSystem(this.debugSystem);
+                    this.assetManager.setDebugSystem(this.debugSystem);
+
+                    this.debugSystem.info('SimpleDemoApp', 'System initialization started');
+
+                    // Initialize quantum circuit
+                    this.quantumProcessor.createSignatureCircuit();
+
+                    // Add validator nodes
+                    this.blockchainCore.addValidatorNode('node_1');
+                    this.blockchainCore.addValidatorNode('node_2');
+
+                    // Create demo assets
+                    this.createDemoAssets();
+
+                    // Start monitoring
+                    this.startMonitoring();
+
+                    // Run initial demonstrations
+                    setTimeout(() => this.runDemonstrations(), 2000);
+
+                    this.debugSystem.info('SimpleDemoApp', 'System initialization completed');
+                    this.updateSystemStatus('Ready', '#00ff00');
+
+                } catch (error) {
+                    this.debugSystem.error('SimpleDemoApp', `Initialization failed: ${error.message}`);
+                    this.updateSystemStatus('Error', '#ff0000');
+                }
+            }
+
+            createDemoAssets() {
+                // Create demo tokens
+                this.golabToken = this.assetManager.createERC20Asset(
+                    'Golab Token', 'GLAB', 'genesis_wallet', 1000000, 18
+                );
+
+                // Create demo NFT
+                this.quantumArt = this.assetManager.createNFTAsset(
+                    'Quantum Art #1', 'QArt', 'artist_wallet', 
+                    'https://example.com/art.json',
+                    { rarity: 'legendary', qubits: 3 }
+                );
+
+                this.debugSystem.info('SimpleDemoApp', 'Demo assets created');
+            }
+
+            startMonitoring() {
+                this.updateInterval = setInterval(() => {
+                    this.updateUI();
+                }, 2000);
+            }
+
+            updateUI() {
+                // Update quantum status
+                const quantumInfo = this.quantumProcessor.getStateInfo();
+                document.getElementById('entangled-status').textContent = quantumInfo.entangled ? 'Yes' : 'No';
+                document.getElementById('quantum-ops').textContent = quantumInfo.circuit.length;
+
+                // Update blockchain status
+                const blockchainStats = this.blockchainCore.getNetworkStats();
+                document.getElementById('block-count').textContent = blockchainStats.chainLength;
+                document.getElementById('pending-tx').textContent = blockchainStats.pendingTransactions;
+                document.getElementById('hash-rate').textContent = `${blockchainStats.hashRate || 0} H/s`;
+
+                // Update asset status
+                const assetStats = this.assetManager.getAssetStats();
+                document.getElementById('total-assets').textContent = assetStats.totalAssets;
+                document.getElementById('erc20-count').textContent = assetStats.assetTypes.ERC20 || 0;
+                document.getElementById('nft-count').textContent = assetStats.assetTypes.NFT || 0;
+                document.getElementById('total-value').textContent = `$${assetStats.totalValue.toFixed(2)}`;
+
+                // Update system health
+                const performance = this.debugSystem.getPerformanceReport();
+                const uptime = Math.floor((Date.now() - this.startTime) / 1000);
+                document.getElementById('uptime').textContent = `${uptime}s`;
+                document.getElementById('error-rate').textContent = `${performance.errorRate.toFixed(1)}%`;
+
+                // Update debug console
+                this.updateDebugConsole();
+            }
+
+            updateDebugConsole() {
+                const console = document.getElementById('debug-console');
+                const recentLogs = this.debugSystem.getRecentLogs(null, 10);
+                
+                console.innerHTML = recentLogs.reverse().map(log => {
+                    const time = new Date(log.timestamp).toLocaleTimeString();
+                    const cssClass = `log-${log.level.toLowerCase()}`;
+                    return `<div class="log-entry ${cssClass}">[${time}] [${log.module}] ${log.message}</div>`;
+                }).join('');
+                
+                console.scrollTop = console.scrollHeight;
+            }
+
+            updateSystemStatus(status, color) {
+                document.getElementById('system-status').textContent = status;
+                document.querySelectorAll('.status').forEach(el => {
+                    el.style.background = color;
+                });
+            }
+
+            runDemonstrations() {
+                this.debugSystem.info('SimpleDemoApp', 'Running initial demonstrations');
+                
+                // Generate quantum signature
+                const signature = this.quantumProcessor.generateQuantumSignature({
+                    message: 'Demo initialization',
+                    timestamp: Date.now()
+                });
+                document.getElementById('last-signature').textContent = signature.substring(0, 12) + '...';
+
+                // Create and sign a transaction
+                const transaction = new Transaction('alice', 'bob', 100);
+                transaction.signTransaction(this.quantumProcessor);
+                this.blockchainCore.addTransaction(transaction);
+
+                this.debugSystem.info('SimpleDemoApp', 'Initial demonstrations completed');
+            }
+        }
+
+        // Global demo functions
+        function demonstrateQuantumSignature() {
+            const signature = app.quantumProcessor.generateQuantumSignature({
+                message: `Demo signature ${Date.now()}`,
+                user: 'demo_user'
+            });
+            document.getElementById('last-signature').textContent = signature.substring(0, 12) + '...';
+            app.debugSystem.info('Demo', 'Quantum signature generated');
+        }
+
+        function demonstrateTokenTransfer() {
+            try {
+                app.assetManager.transferAsset(app.golabToken.id, 'genesis_wallet', 'user_wallet', 1000);
+                app.debugSystem.info('Demo', 'Token transfer completed');
+            } catch (error) {
+                app.debugSystem.error('Demo', `Token transfer failed: ${error.message}`);
+            }
+        }
+
+        function demonstrateBlockMining() {
+            try {
+                const tx = new Transaction('user_wallet', 'miner_wallet', 50);
+                tx.signTransaction(app.quantumProcessor);
+                app.blockchainCore.addTransaction(tx);
+                app.blockchainCore.minePendingTransactions('miner_wallet');
+                app.debugSystem.info('Demo', 'Block mining completed');
+            } catch (error) {
+                app.debugSystem.error('Demo', `Block mining failed: ${error.message}`);
+            }
+        }
+
+        function demonstrateAssetCreation() {
+            try {
+                const nft = app.assetManager.createNFTAsset(
+                    `Demo NFT #${Date.now()}`,
+                    'DEMO',
+                    'creator_wallet',
+                    'https://example.com/nft.json',
+                    { rarity: 'common', timestamp: Date.now() }
+                );
+                app.debugSystem.info('Demo', `NFT created: ${nft.name}`);
+            } catch (error) {
+                app.debugSystem.error('Demo', `NFT creation failed: ${error.message}`);
+            }
+        }
+
+        function generateDiagnosticReport() {
+            const report = app.debugSystem.generateDiagnosticReport();
+            app.debugSystem.info('Demo', `Diagnostic report generated - Health: ${report.systemHealth.status}`);
+            console.log('Full diagnostic report:', report);
+        }
+
+        // Initialize the demo application
+        let app;
+        document.addEventListener('DOMContentLoaded', () => {
+            app = new SimpleDemoApp();
+            app.initialize();
+        });
+    </script>
+</body>
+</html>
