@@ -1,0 +1,38 @@
+{
+  "name": "golab-blockchain",
+  "version": "1.0.0",
+  "description": "Quantum-resistant blockchain system with AI validators and bot businesses",
+  "main": "src/main.js",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "jest",
+    "lint": "eslint src/",
+    "start": "node src/server.js"
+  },
+  "keywords": [
+    "blockchain",
+    "quantum-resistant",
+    "ai-validators",
+    "three.js",
+    "web3"
+  ],
+  "author": "Andrew Lee Cruz",
+  "license": "MIT",
+  "dependencies": {
+    "three": "^0.157.0",
+    "crypto-js": "^4.2.0",
+    "noble-ed25519": "^2.0.0",
+    "uuid": "^9.0.1",
+    "express": "^4.18.2",
+    "ws": "^8.14.2"
+  },
+  "devDependencies": {
+    "vite": "^4.5.0",
+    "jest": "^29.7.0",
+    "eslint": "^8.53.0",
+    "@types/three": "^0.157.0"
+  }
+}
