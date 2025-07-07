@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golab - Quantum Blockchain Asset Management</title>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.157.0/build/three.min.js"></script>
+    <script>
+        // Fallback for Three.js if CDN fails
+        if (typeof THREE === 'undefined') {
+            console.warn('THREE.js not loaded from CDN, creating minimal fallback');
+            window.THREE = {
+                Scene: function() { this.children = []; this.add = function(obj) { this.children.push(obj); }; },
+                PerspectiveCamera: function() { this.position = {z: 5}; this.aspect = 1; this.updateProjectionMatrix = function() {}; },
+                WebGLRenderer: function() { 
+                    this.domElement = document.createElement('canvas');
+                    this.setSize = function() {};
+                    this.setClearColor = function() {};
+                    this.render = function() {};
+                },
+                HemisphereLight: function() {},
+                DirectionalLight: function() { this.position = {set: function() {}}; },
+                CylinderGeometry: function() { this.translate = function() {}; },
+                ShaderMaterial: function() { this.uniforms = {}; },
+                Mesh: function() { this.rotation = {x: 0, y: 0}; this.add = function() {}; },
+                PlaneGeometry: function() {},
+                MeshBasicMaterial: function() {},
+                Color: function() {},
+                DoubleSide: 1,
+                Group: function() { this.children = []; this.add = function(obj) { this.children.push(obj); }; this.position = {set: function() {}}; this.rotation = {y: 0}; },
+                SphereGeometry: function() {},
+                MeshPhongMaterial: function() { this.opacity = 1; },
+                BoxGeometry: function() {},
+                BufferGeometry: function() { this.setFromPoints = function() {}; },
+                LineBasicMaterial: function() {},
+                Line: function() {},
+                Vector3: function() {},
+                OctahedronGeometry: function() {},
+                Raycaster: function() { this.setFromCamera = function() {}; this.intersectObjects = function() { return []; }; },
+                Vector2: function() { this.x = 0; this.y = 0; },
+                TextureLoader: function() { this.load = function(url, success, progress, error) { if (error) error(); }; }
+            };
+            // Mock OrbitControls
+            window.THREE.OrbitControls = function() { 
+                this.enableDamping = true; 
+                this.dampingFactor = 0.1; 
+                this.rotateSpeed = 0.5; 
+                this.update = function() {}; 
+            };
+        }
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            font-family: 'Inter', sans-serif; 
+            background-color: #f0f0f0; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        #container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+        canvas { 
+            display: block; 
+            width: 100%; 
+            height: 100%; 
+        }
+        #overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 16px;
+            z-index: 1;
+            padding: 10px;
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+        }
+        #debug-panel {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 300px;
+            max-height: 400px;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            font-size: 12px;
+            padding: 10px;
+            border-radius: 5px;
+            overflow-y: auto;
+            z-index: 2;
+        }
+        #quantum-status {
+            position: absolute;
+            bottom: 10px;
+            left: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1;
+        }
+        #blockchain-status {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            z-index: 1;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <canvas id="canvas"></canvas>
+        <div id="overlay">
+            <p>Loading Quantum Blockchain System...</p>
+        </div>
+        <div id="debug-panel">
+            <h4>Debug Console</h4>
+            <div id="debug-log"></div>
+        </div>
+        <div id="quantum-status">
+            <h4>Quantum Circuit</h4>
+            <div id="quantum-info">Initializing...</div>
+        </div>
+        <div id="blockchain-status">
+            <h4>Blockchain</h4>
+            <div id="blockchain-info">Initializing...</div>
+        </div>
+    </div>
+
+    <!-- Core modules -->
+    <script src="src/quantum/QuantumProcessor.js"></script>
+    <script src="src/blockchain/BlockchainCore.js"></script>
+    <script src="src/assets/AssetManager.js"></script>
+    <script src="src/debug/DebugSystem.js"></script>
+    <script src="src/visualization/ThreeJSIntegration.js"></script>
+    <script src="src/main.js"></script>
+</body>
+</html>
