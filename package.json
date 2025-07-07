@@ -1,0 +1,37 @@
+{
+  "name": "golab",
+  "version": "1.0.0",
+  "description": "Ethereum automation script for transferring funds and monitoring earnings",
+  "main": "ethereum-automation.js",
+  "bin": {
+    "golab": "./cli.js"
+  },
+  "scripts": {
+    "start": "node ethereum-automation.js",
+    "cli": "node cli.js",
+    "setup": "node cli.js setup",
+    "balance": "node cli.js balance",
+    "run": "node cli.js run",
+    "monitor": "node cli.js monitor",
+    "test-dry": "node cli.js run --dry-run",
+    "test-structure": "node test-structure.js",
+    "test": "node test-structure.js"
+  },
+  "keywords": [
+    "ethereum",
+    "automation",
+    "cryptocurrency",
+    "blockchain",
+    "wallet",
+    "transfer"
+  ],
+  "author": "Andrew Lee Cruz",
+  "license": "MIT",
+  "dependencies": {
+    "dotenv": "^17.0.1",
+    "ethers": "^6.15.0"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}

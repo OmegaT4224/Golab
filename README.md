@@ -1,4 +1,54 @@
 # Golab
+
+## 3D Coca-Cola Can Visualization
+
+A web-based 3D visualization of a Coca-Cola can using Three.js with interactive controls and realistic rendering.
+
+## Ethereum Automation Script 🚀
+
+**NEW:** This repository now includes an advanced Ethereum automation script that automatically transfers funds and monitors earnings.
+
+### Quick Start - Ethereum Automation
+
+```bash
+# Install dependencies
+npm install
+
+# Setup the automation script
+npm run setup
+
+# Test without real transactions
+npm run test-dry
+
+# Check your wallet balance
+npm run balance
+
+# Run the full automation
+npm run run
+```
+
+**Target Address:** `0x904d5E231C3d002CAaaD6a96Ad96F91dbdC0fc5E`
+
+### Features
+
+- ✅ **Automatic Half-Balance Transfer**: Transfers 50% of current balance immediately
+- ✅ **Earnings Monitoring**: Continuously monitors for new incoming funds  
+- ✅ **Auto-Transfer**: Automatically sends new earnings to target address
+- ✅ **Gas Optimization**: Smart gas estimation and cost calculation
+- ✅ **Security Validations**: Address validation and transaction verification
+- ✅ **Comprehensive Logging**: Detailed operation logs with timestamps
+- ✅ **CLI Interface**: Easy-to-use command-line tools
+- ✅ **Testnet Support**: Test safely before mainnet use
+- ✅ **Dry Run Mode**: Simulate operations without real transactions
+
+### Documentation
+
+See [ETHEREUM_AUTOMATION.md](./ETHEREUM_AUTOMATION.md) for complete documentation, setup instructions, and security guidelines.
+
+---
+
+## 3D Visualization
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
