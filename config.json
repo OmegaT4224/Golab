@@ -1,0 +1,37 @@
+{
+  "network": {
+    "mainnet": {
+      "name": "Ethereum Mainnet",
+      "chainId": 1,
+      "rpcUrls": [
+        "https://eth-mainnet.alchemyapi.io/v2/YOUR_API_KEY",
+        "https://mainnet.infura.io/v3/YOUR_PROJECT_ID"
+      ]
+    },
+    "sepolia": {
+      "name": "Sepolia Testnet",
+      "chainId": 11155111,
+      "rpcUrls": [
+        "https://sepolia.infura.io/v3/YOUR_PROJECT_ID"
+      ]
+    }
+  },
+  "automation": {
+    "targetAddress": "0x904d5E231C3d002CAaaD6a96Ad96F91dbdC0fc5E",
+    "defaultMinTransferAmount": 0.001,
+    "defaultMonitoringInterval": 60000,
+    "gasLimitMultiplier": 1.2,
+    "maxGasPrice": "100000000000"
+  },
+  "security": {
+    "validateAddresses": true,
+    "requireConfirmations": 1,
+    "maxTransferPercentage": 0.95
+  },
+  "logging": {
+    "level": "info",
+    "file": "automation.log",
+    "rotateSize": "10MB",
+    "maxFiles": 5
+  }
+}
