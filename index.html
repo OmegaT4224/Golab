@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Golab - 3D Quantum Blockchain Visualization</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            margin: 0; 
+            overflow: hidden; 
+            font-family: 'Inter', sans-serif; 
+            background: linear-gradient(135deg, #0f0f0f, #1a1a2e, #16213e); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            min-height: 100vh; 
+        }
+        #canContainer {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+        canvas { 
+            display: block; 
+            width: 100%; 
+            height: 100%; 
+        }
+        #overlay {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: white;
+            font-size: 16px;
+            z-index: 1;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 300px;
+        }
+        #overlay h2 {
+            margin: 0 0 10px 0;
+            color: #4fc3f7;
+            font-size: 20px;
+        }
+        #overlay p {
+            margin: 5px 0;
+            line-height: 1.4;
+        }
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #4fc3f7;
+            animation: spin 1s ease-in-out infinite;
+        }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div id="canContainer">
+        <canvas id="cocaColaCan"></canvas>
+        <div id="overlay">
+            <h2>Quantum Blockchain Lab</h2>
+            <p><span class="loading-spinner"></span> Initializing quantum blockchain...</p>
+            <p>Loading 3D visualization...</p>
+        </div>
+    </div>
+
+    <!-- Include blockchain modules -->
+    <script src="blockchain.js"></script>
+    <script src="blockchain-visualization.js"></script>
+    <script src="blockchain-ui.js"></script>
+
+    <script>
+        // Initialize Three.js scene
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ 
+            canvas: document.getElementById('cocaColaCan'), 
+            antialias: true,
+            alpha: true
+        });
+        const canvas = renderer.domElement;
+
+        function resizeCanvas() {
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+        }
+
+        resizeCanvas();
+
+        // Set background to match the gradient
+        renderer.setClearColor(0x0f0f0f, 0);
+
+        // Enhanced lighting for better visual appeal
+        const ambientLight = new THREE.HemisphereLight(0x4fc3f7, 0x404040, 0.6);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(1, 1, 2);
+        directionalLight.castShadow = true;
+        scene.add(directionalLight);
+
+        const pointLight = new THREE.PointLight(0x4fc3f7, 0.5, 10);
+        pointLight.position.set(0, 5, 0);
+        scene.add(pointLight);
+
+        // Orbit Controls
+        const controls = new THREE.OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.rotateSpeed = 0.8;
+        controls.zoomSpeed = 1.2;
+        controls.panSpeed = 0.8;
+
+        camera.position.set(5, 3, 5);
+        controls.target.set(0, 0, 0);
+
+        // Create the original Coca-Cola can geometry with enhanced materials
+        function createCokeCanGeometry(radius = 1, height = 3, radialSegments = 64, heightSegments = 32) {
+            const geometry = new THREE.CylinderGeometry(radius, radius, height, radialSegments, heightSegments, true);
+            geometry.translate(0, height / 2, 0);
+            return geometry;
+        }
+
+        // Enhanced can material with quantum-inspired effects
+        const canMaterial = new THREE.ShaderMaterial({
+            vertexShader: `
+                varying vec3 vNormal;
+                varying vec3 vPosition;
+                uniform float uTime;
+                void main() {
+                    vNormal = normal;
+                    vPosition = position;
+                    
+                    // Add subtle animation
+                    vec3 pos = position;
+                    pos += normal * sin(uTime * 0.5 + position.y * 2.0) * 0.01;
+                    
+                    gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
+                }
+            `,
+            fragmentShader: `
+                varying vec3 vNormal;
+                varying vec3 vPosition;
+                uniform vec3 uBaseColor;
+                uniform vec3 uHighlightColor;
+                uniform vec3 uRimColor;
+                uniform float uShininess;
+                uniform float uRimThickness;
+                uniform float uTime;
+                
+                void main() {
+                    vec3 normal = normalize(vNormal);
+                    vec3 lightDir = normalize(vec3(1.0, 1.0, 2.0));
+                    float diffuse = max(dot(normal, lightDir), 0.0);
+                    
+                    vec3 viewDir = normalize(cameraPosition - vPosition);
+                    vec3 reflectDir = reflect(-lightDir, normal);
+                    float specular = pow(max(dot(viewDir, reflectDir), 0.0), uShininess);
+                    
+                    // Add quantum-inspired color variation
+                    float quantumEffect = sin(uTime * 0.3 + vPosition.y * 3.0) * 0.1 + 0.9;
+                    vec3 baseColor = uBaseColor * diffuse * quantumEffect;
+                    
+                    vec3 highlight = uHighlightColor * specular * 0.5;
+                    
+                    float rimDot = 1.0 - max(dot(viewDir, normal), 0.0);
+                    float rimEffect = pow(rimDot, uRimThickness);
+                    vec3 rimColor = uRimColor * rimEffect * 0.8;
+                    
+                    vec3 finalColor = baseColor + highlight + rimColor;
+                    gl_FragColor = vec4(finalColor, 0.9);
+                }
+            `,
+            uniforms: {
+                uBaseColor: { value: new THREE.Color(0xff0000) },
+                uHighlightColor: { value: new THREE.Color(0xffffff) },
+                uRimColor: { value: new THREE.Color(0x222222) },
+                uShininess: { value: 50.0 },
+                uRimThickness: { value: 3.0 },
+                uTime: { value: 0 }
+            },
+            side: THREE.DoubleSide,
+            transparent: true,
+        });
+
+        const canGeometry = createCokeCanGeometry();
+        const can = new THREE.Mesh(canGeometry, canMaterial);
+        scene.add(can);
+
+        // Initialize blockchain system
+        let blockchain, blockchainViz, blockchainUI;
+        
+        function initializeBlockchain() {
+            try {
+                blockchain = new Blockchain();
+                blockchainViz = new BlockchainVisualization(scene, blockchain);
+                blockchainUI = new BlockchainUI(blockchainViz);
+                
+                // Add some initial demo blocks
+                blockchain.addBlock({
+                    type: 'genesis_transaction',
+                    data: 'Initial quantum coin distribution',
+                    timestamp: Date.now()
+                });
+                
+                blockchainViz.updateVisualization();
+                
+                // Update overlay
+                document.getElementById('overlay').innerHTML = `
+                    <h2>Quantum Blockchain Lab</h2>
+                    <p>✅ Blockchain initialized</p>
+                    <p>✅ 3D visualization ready</p>
+                    <p>🎮 Use controls on the right to interact</p>
+                    <p>🖱️ Click and drag to rotate view</p>
+                `;
+                
+                // Hide overlay after a few seconds
+                setTimeout(() => {
+                    document.getElementById('overlay').style.opacity = '0';
+                    setTimeout(() => {
+                        document.getElementById('overlay').style.display = 'none';
+                    }, 1000);
+                }, 4000);
+                
+            } catch (error) {
+                console.error('Failed to initialize blockchain:', error);
+                document.getElementById('overlay').innerHTML = `
+                    <h2>Quantum Blockchain Lab</h2>
+                    <p>❌ Error initializing blockchain</p>
+                    <p>${error.message}</p>
+                `;
+            }
+        }
+
+        // Mouse interaction for block selection
+        const mouse = new THREE.Vector2();
+        function onMouseClick(event) {
+            mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+            mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+            
+            if (blockchainViz) {
+                const selectedBlock = blockchainViz.handleBlockSelection(mouse, camera);
+                if (selectedBlock && blockchainUI) {
+                    blockchainUI.showBlockDetails(selectedBlock.block);
+                } else if (blockchainUI) {
+                    blockchainUI.hideBlockDetails();
+                }
+            }
+        }
+
+        canvas.addEventListener('click', onMouseClick);
+
+        // Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            
+            const time = Date.now();
+            
+            // Animate the can
+            can.rotation.y += 0.003;
+            can.rotation.x = Math.sin(time * 0.001) * 0.05;
+            
+            // Update shader uniforms
+            canMaterial.uniforms.uTime.value = time * 0.001;
+            
+            // Animate blockchain visualization
+            if (blockchainViz) {
+                blockchainViz.animate(time);
+            }
+            
+            controls.update();
+            renderer.render(scene, camera);
+        }
+
+        // Start the application
+        animate();
+        
+        // Initialize blockchain after a short delay to let Three.js settle
+        setTimeout(initializeBlockchain, 1000);
+
+        // Handle window resize
+        window.addEventListener('resize', resizeCanvas);
+
+        // Load Coca-Cola logo texture (optional enhancement)
+        const textureLoader = new THREE.TextureLoader();
+        textureLoader.load(
+            'https://www.coca-colacompany.com/content/dam/journey/us/en/private/fileasset/image/cocacola-logo-shareable.jpg',
+            function (texture) {
+                const logoGeometry = new THREE.PlaneGeometry(2, 1);
+                const logoMaterial = new THREE.MeshBasicMaterial({
+                    map: texture,
+                    transparent: true,
+                    side: THREE.DoubleSide,
+                    opacity: 0.8
+                });
+                const logo = new THREE.Mesh(logoGeometry, logoMaterial);
+                logo.position.set(0, 0, 1.05);
+                can.add(logo);
+                logo.rotation.y = Math.PI;
+            },
+            undefined,
+            function (err) {
+                console.log('Logo texture failed to load, continuing without it');
+            }
+        );
+
+        // Expose global functions for debugging
+        window.blockchain = () => blockchain;
+        window.addDemoBlock = () => {
+            if (blockchainViz) {
+                blockchainViz.addBlock({
+                    type: 'demo',
+                    data: 'Demo transaction #' + Date.now(),
+                    timestamp: Date.now()
+                });
+            }
+        };
+
+    </script>
+</body>
+</html>
