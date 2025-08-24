@@ -1,0 +1,42 @@
+{
+  "name": "golab-quantum-blockchain",
+  "version": "1.0.0",
+  "description": "Quantum-resistant blockchain integration for Golab 3D visualization",
+  "main": "blockchain.js",
+  "scripts": {
+    "test": "node test-blockchain.js",
+    "serve": "python3 -m http.server 8000",
+    "demo": "node -e \"console.log('🚀 Starting Golab Quantum Blockchain Demo'); console.log('📂 Open http://localhost:8000 in your browser'); require('child_process').spawn('python3', ['-m', 'http.server', '8000'], {stdio: 'inherit'});\""
+  },
+  "keywords": [
+    "blockchain",
+    "quantum",
+    "3d",
+    "visualization",
+    "threejs",
+    "webgl",
+    "cryptocurrency",
+    "quantum-resistant",
+    "demo"
+  ],
+  "author": "OmegaT4224",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OmegaT4224/Golab.git"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "files": [
+    "blockchain.js",
+    "blockchain-visualization.js",
+    "blockchain-ui.js",
+    "index.html",
+    "demo.html",
+    "test.html",
+    "BLOCKCHAIN_README.md"
+  ]
+}
